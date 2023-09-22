@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.1.0
+    container_name: gwooteam-mysql
+    restart: always
+    ports:
+      - 4000:3306
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: 4239
+    volumes:
+      - /Users/youngjunlee/BoB/gwooteam:/docker-entrypoint-initdb.d
+    platform: linux/arm64
