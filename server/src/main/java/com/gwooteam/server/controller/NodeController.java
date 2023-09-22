@@ -17,10 +17,20 @@ public class NodeController {
 
     private final NodeService nodeService;
 
+    @GetMapping("/nodes/new")
+    public String createNode(Model model) {
+        model.addAttribute("form", new NodeForm());
+        return "nodes/createNodeForm";
+    }
+
     @PostMapping("/nodes/new")
-    public void create(@RequestBody Node node) {
-//        User newUser = new User(user.getId(), user.getHostname(), user.getId());
+    public String create(NodeForm form) {
+        Node node = new Node();
+        node.setHostname(form.getHostname());
+        node.setIp(form.getIp());
+
         nodeService.join(node);
+        return "redirect:/nodes";
     }
 
     @GetMapping("/nodes")

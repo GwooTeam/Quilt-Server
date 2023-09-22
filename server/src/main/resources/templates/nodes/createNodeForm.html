@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <form th:action="@{/nodes/new}" th:object="${form}" method="post">
+    <div class="form-group">
+      <label th:for="hostname">hostname</label>
+      <input type="text" th:field="*{hostname}" class="form-control"
+             placeholder="hostname을 입력하세요"> </div>
+    <div class="form-group">
+      <label th:for="ip">ip</label>
+      <input type="text" th:field="*{ip}" class="form-control" placeholder="ip를 입력하세요">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <br/>
+</div> <!-- /container -->
+</body>
+</html>
