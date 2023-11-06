@@ -10,5 +10,5 @@ services:
       TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: 4239
     volumes:
-      - /Users/youngjunlee/BoB/gwooteam:/docker-entrypoint-initdb.d
+      - "/Users/youngjunlee/Bob/gwooteam/init_db.sql:/docker-entrypoint-initdb.d"
     platform: linux/arm64

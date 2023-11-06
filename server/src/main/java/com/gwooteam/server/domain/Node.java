@@ -22,4 +22,12 @@ public class Node {
     @NonNull
     @Column(unique = true, length = 15)
     private String ip;
+
+    @NonNull
+    @Column(unique = true, length = 10)
+    private String nodeID;
+
+    @NonNull
+    @Column(unique = true, length = 10)
+    private String nodePW;
 }

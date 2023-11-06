@@ -28,6 +28,8 @@ public class NodeController {
         Node node = new Node();
         node.setHostname(form.getHostname());
         node.setIp(form.getIp());
+        node.setNodeID(form.getNodeID());
+        node.setNodePW(form.getNodePW());
 
         nodeService.join(node);
         return "redirect:/nodes";
