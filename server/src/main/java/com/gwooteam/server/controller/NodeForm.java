@@ -10,4 +10,5 @@ public class NodeForm {
     private String ip;
     private String nodeID;
     private String nodePW;
+    private String nonce;
 }

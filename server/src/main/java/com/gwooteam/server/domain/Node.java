@@ -30,4 +30,7 @@ public class Node {
     @NonNull
     @Column(unique = true, length = 10)
     private String nodePW;
+
+    @Column(unique = true, length = 10)
+    private String nonce;
 }
