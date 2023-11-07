@@ -36,6 +36,7 @@ public class NodeService {
         return this.nodeRepository.findOne(id);
     }
 
+    // Nonce 저장
     @Transactional
     public void saveNonce(Long id, String nonce) {
         // nonce가 있다면 메서드 호출 못하도록 구현 필요

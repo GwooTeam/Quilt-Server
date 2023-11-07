@@ -17,6 +17,21 @@ public class NodeApiController {
 
     private final NodeService nodeService;
 
+    // ServerPubKey
+    @PostMapping("/node/requestSvrPubK")
+    public ResponseEntity<FetchSvrPubK> enrollNonce () {
+        FetchSvrPubK svrPubK = new FetchSvrPubK();
+        return ResponseEntity.ok(svrPubK);
+    }
+
+    @Data
+    static class FetchSvrPubK {
+        private String svrPubK;
+        // 사전에 Svr.PubK, Svr.PriK 생성한 후 Fetch해오도록 수정
+        public FetchSvrPubK() { this.svrPubK = "alreadyGeneratedSvrPubK";}
+    }
+
+    // Nonce
     @PostMapping("/node/{id}/generateNonce")
     public ResponseEntity<SaveNonce> enrollNonce (@PathVariable("id") Long id) {
         String nonce = generateNonce();
