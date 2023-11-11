@@ -33,4 +33,11 @@ public class Node {
 
     @Column(unique = true, length = 10)
     private String nonce;
+
+    // Node Key
+    @Column(unique = true, length = 20)
+    private String encryptPubK;
+
+    @Column(unique = true, length = 20)
+    private String signPubK;
 }

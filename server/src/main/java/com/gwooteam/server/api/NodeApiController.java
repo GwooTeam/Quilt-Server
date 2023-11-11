@@ -1,5 +1,6 @@
 package com.gwooteam.server.api;
 
+import com.gwooteam.server.domain.Node;
 import com.gwooteam.server.service.NodeService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Random;
 
 @RestController
@@ -59,4 +61,55 @@ public class NodeApiController {
         }
         return nonce.toString();
     }
+
+    // Verify MAC, Sign, PubK(s), PubK(e)
+    @PostMapping("/node/{id}/verify")
+    public ResponseEntity<Certificates> verify(@PathVariable("id") Long id, @RequestBody @Valid Verify request) {
+
+        VerifyForm verifyForm = new VerifyForm();
+
+        // Save Node PubK(s), PubK(e)
+        Node node = nodeService.findOne(id);
+        nodeService.savePubKeys(id, request.getNodeEncryptPubK(), request.getNodeSignPubK());
+
+        // 모듈화 예정
+        // Verify MAC
+        String fetchNonce = nodeService.findOne(id).getNonce();
+        String nodeSign = request.getNodeSign();
+        String nodeMac = request.getNodeMac();
+
+        // Verify Sign
+
+
+        // Generate Certificates(어떤 로직을 거쳐)
+        String encryptCertificate = "";
+        String signCertificate= "";
+
+        // Save Certificates
+        Certificates certificates = new Certificates();
+        certificates.encryptCertificate = encryptCertificate;
+        certificates.signCertificate = signCertificate;
+
+        // Send Certificates
+        return ResponseEntity.ok(certificates);
+    }
+
+    @Data
+    static class Verify {
+        private String nodeMac;
+        private String nodeSign;
+        private String nodeEncryptPubK;
+        private String nodeSignPubK;
+    }
+
+    @Data
+    static class Certificates {
+        // Certificate Class 정의 필요
+        private String signCertificate;
+        private String encryptCertificate;
+    }
+
+//    private Certificates generateCertificates() {
+//
+//    }
 }
