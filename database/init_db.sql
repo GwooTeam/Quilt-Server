@@ -8,11 +8,15 @@ CREATE TABLE node_info (
     nodeID VARCHAR(10) NOT NULL,
     nodePW VARCHAR(10) NOT NULL,
     hostname VARCHAR(10) NOT NULL,
-    ip VARCHAR(15) NOT NULL,
+    publicIP VARCHAR(15) NOT NULL,
     nonce VARCHAR(20),
+    mk VARCHAR(20) NOT NULL,
+    serialNumber VARCHAR(10),
+    encryptPubK VARCHAR(20),
+    signPubK VARCHAR(20),
     PRIMARY KEY (id)
 ) ENGINE=InnODB DEFAULT CHARSET=utf8;
 
-INSERT INTO node_info (nodeID, nodePW, hostname, ip, nonce) VALUES ('james010', '1111', 'lee', '111.111.111.111', '');
-INSERT INTO node_info (nodeID, nodePW, hostname, ip, nonce) VALUES ('james8238', '2222', 'young', '222.222.222.222', '');
-INSERT INTO node_info (nodeID, nodePW, hostname, ip, nonce) VALUES ('james4239', '3333', 'jun', '333.333.333.333', '');
+INSERT INTO node_info (nodeID, nodePW, hostname, publicIP, nonce, mk, serialNumber, encryptPubK, signPubK) VALUES ('james010', '1111', 'lee', '111.111.111.111', '', 'firstMK', '', '', '');
+INSERT INTO node_info (nodeID, nodePW, hostname, publicIP, nonce, mk, serialNumber, encryptPubK, signPubK) VALUES ('james8238', '2222', 'young', '222.222.222.222', '', 'secondMK', '', '', '');
+INSERT INTO node_info (nodeID, nodePW, hostname, publicIP, nonce, mk, serialNumber, encryptPubK, signPubK) VALUES ('james4239', '3333', 'jun', '333.333.333.333', '', 'thirdMK', '', '', '');
