@@ -27,7 +27,7 @@ public class NodeController {
     public String create(NodeForm form) {
         Node node = new Node();
         node.setHostname(form.getHostname());
-        node.setIp(form.getIp());
+        node.setPublicIP(form.getIp());
         node.setNodeID(form.getNodeID());
         node.setNodePW(form.getNodePW());
 
