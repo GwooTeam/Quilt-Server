@@ -8,4 +8,7 @@ public class NodeForm {
     private Long id;
     private String hostname;
     private String ip;
+    private String nodeID;
+    private String nodePW;
+    private String nonce;
 }

@@ -21,5 +21,32 @@ public class Node {
 
     @NonNull
     @Column(unique = true, length = 15)
-    private String ip;
+    private String publicIP;
+
+    @NonNull
+    @Column(unique = true, length = 10)
+    private String nodeID;
+
+    @NonNull
+    @Column(unique = true, length = 10)
+    private String nodePW;
+
+    // MAC, Nonce Verification
+    @Column(unique = true, length = 10)
+    private String nonce;
+
+    @NonNull
+    @Column(unique = true, length = 10)
+    private String mk;
+
+    // Certificate Serial Number
+    @Column(unique = true, length = 10)
+    private String serialNumber;
+
+    // Node Key
+    @Column(unique = true, length = 20)
+    private String encryptPubK;
+
+    @Column(unique = true, length = 20)
+    private String signPubK;
 }

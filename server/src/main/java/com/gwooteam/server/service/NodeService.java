@@ -36,6 +36,21 @@ public class NodeService {
         return this.nodeRepository.findOne(id);
     }
 
-    // public void update(Long id, String hostname)
+    // Save Nonce
+    @Transactional
+    public void saveNonce(Long id, String nonce) {
+        // nonce가 있다면 메서드 호출 못하도록 구현 필요
+        Node node = nodeRepository.findOne(id);
+        node.setNonce(nonce);
+        this.nodeRepository.save(node);
+    }
 
+    // Save EncryptPubK, SignPubK
+    @Transactional
+    public void savePubKeys(Long id, String encryptPubK, String signPubK) {
+        Node node = nodeRepository.findOne(id);
+        node.setEncryptPubK(encryptPubK);
+        node.setSignPubK(signPubK);
+        this.nodeRepository.save(node);
+    }
 }
