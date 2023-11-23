@@ -7,11 +7,15 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
+// @Repository
+// @RequiredArgsConstructor
 public class NodeRepository {
 
     private final EntityManager em;
+
+    public NodeRepository(EntityManager em) {
+        this.em = em;
+    }
 
     public void save(Node node) { this.em.persist(node); }
 
