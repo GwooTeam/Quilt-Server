@@ -17,6 +17,7 @@ public class AppConfig {
 
     private final EntityManager em;
 
+    @Autowired
     public AppConfig(EntityManager em) {
         this.em = em;
     }

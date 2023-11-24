@@ -3,6 +3,7 @@ package com.gwooteam.server.api;
 import com.gwooteam.server.auth.Certificates;
 import com.gwooteam.server.auth.ServerKey;
 import com.gwooteam.server.domain.Node;
+import com.gwooteam.server.service.NodeApiService;
 import com.gwooteam.server.service.NodeApiServiceImpl;
 import com.gwooteam.server.service.NodeService;
 import lombok.Data;
@@ -23,9 +24,9 @@ import java.util.Random;
 public class NodeApiController {
 
     private final NodeService nodeService;
-    private final NodeApiServiceImpl nodeApiService;
+    private final NodeApiService nodeApiService;
 
-    public NodeApiController(NodeService nodeService, NodeApiServiceImpl nodeApiService) {
+    public NodeApiController(NodeService nodeService, NodeApiService nodeApiService) {
         this.nodeService = nodeService;
         this.nodeApiService = nodeApiService;
     }
