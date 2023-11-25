@@ -11,14 +11,10 @@ import java.util.List;
 
 // @Service
 @Transactional(readOnly = true)
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class NodeService {
-    private final NodeRepository nodeRepository;
 
-    @Autowired
-    public NodeService(NodeRepository nodeRepository) {
-        this.nodeRepository = nodeRepository;
-    }
+    private final NodeRepository nodeRepository;
 
     @Transactional
     public Long join(Node node) {

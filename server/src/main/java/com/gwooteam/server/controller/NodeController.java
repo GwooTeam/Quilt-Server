@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @Controller
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class NodeController {
 
     private final NodeService nodeService;
-
-    public NodeController(NodeService nodeService) {
-        this.nodeService = nodeService;
-    }
 
     @GetMapping("/nodes/new")
     public String createNode(Model model) {

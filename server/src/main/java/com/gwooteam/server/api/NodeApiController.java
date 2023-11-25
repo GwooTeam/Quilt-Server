@@ -1,15 +1,11 @@
 package com.gwooteam.server.api;
 
 import com.gwooteam.server.auth.Certificates;
-import com.gwooteam.server.auth.ServerKey;
-import com.gwooteam.server.domain.Node;
+import com.gwooteam.server.auth.QuiltKey;
 import com.gwooteam.server.service.NodeApiService;
-import com.gwooteam.server.service.NodeApiServiceImpl;
 import com.gwooteam.server.service.NodeService;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,24 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Random;
 
 @RestController
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class NodeApiController {
 
     private final NodeService nodeService;
     private final NodeApiService nodeApiService;
 
-    public NodeApiController(NodeService nodeService, NodeApiService nodeApiService) {
-        this.nodeService = nodeService;
-        this.nodeApiService = nodeApiService;
-    }
-
     // ServerPubKey
     @PostMapping("/node/requestSvrPubK")
-    public ResponseEntity<ServerKey> getServerPubKey() {
-        ServerKey key = nodeApiService.getServerDsaPubKey();
+    public ResponseEntity<QuiltKey> getServerPubKey() {
+        QuiltKey key = nodeApiService.getServerDsaPubKey();
         return ResponseEntity.ok(key);
 //        FetchSvrPubK svrPubK = new FetchSvrPubK();
 //        return ResponseEntity.ok(svrPubK);

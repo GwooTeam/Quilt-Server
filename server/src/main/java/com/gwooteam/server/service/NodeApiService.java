@@ -1,11 +1,11 @@
 package com.gwooteam.server.service;
 
 import com.gwooteam.server.auth.Certificates;
-import com.gwooteam.server.auth.ServerKey;
+import com.gwooteam.server.auth.QuiltKey;
 
 public interface NodeApiService {
 
-    ServerKey getServerDsaPubKey();
+    QuiltKey getServerDsaPubKey();
 
     String generateNonce();
 

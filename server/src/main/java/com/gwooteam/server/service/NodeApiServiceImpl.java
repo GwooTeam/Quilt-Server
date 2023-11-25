@@ -1,33 +1,31 @@
 package com.gwooteam.server.service;
 
 import com.gwooteam.server.auth.*;
+import com.gwooteam.server.auth.KeyAlgorithm;
+import com.gwooteam.server.auth.KeyType;
 import com.gwooteam.server.domain.Node;
+import com.gwooteam.server.encryption.DataEncryption;
 import com.gwooteam.server.repository.NodeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 // @Service
+@RequiredArgsConstructor
 public class NodeApiServiceImpl implements NodeApiService {
 
     private final NodeRepository nodeRepository;
     private final NodeAuthentication nodeAuthentication;
-
-    public NodeApiServiceImpl(NodeRepository nodeRepository, NodeAuthentication nodeAuthentication) {
-        this.nodeRepository = nodeRepository;
-        this.nodeAuthentication = nodeAuthentication;
-    }
+    private final DataEncryption dataEncryption;
 
     @Override
-    public ServerKey getServerDsaPubKey() {
-        ServerKey key = new ServerKey(KeyType.PUBLIC_KEY, KeyAlgorithm.ML_DSA);
+    public QuiltKey getServerDsaPubKey() {
+        QuiltKey key = new QuiltKey(KeyType.PUBLIC_KEY, KeyAlgorithm.ML_DSA);
 
         // 파일로부터 서버 key 읽어와야 함
         Resource resource = new ClassPathResource("modules/ML-DSA/dilithium_key.puk");
@@ -68,7 +66,7 @@ public class NodeApiServiceImpl implements NodeApiService {
         // 서버의 개인키 추출
         // ServerKey prk = new ServerKey(KeyType.PRIVATE_KEY, KeyAlgorithm.ML_DSA);
 
-        Boolean verifySignResult = nodeAuthentication.verifySign(nodeSign);
+        Boolean verifySignResult = nodeAuthentication.verifySign("originFile", nodeSign);
         Boolean macRes = verifyMac(nonce, nodeMac);
 
         return (verifySignResult && macRes);

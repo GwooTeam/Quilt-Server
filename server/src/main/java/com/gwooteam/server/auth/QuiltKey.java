@@ -1,17 +1,17 @@
 package com.gwooteam.server.auth;
 
-public class ServerKey {
+public class QuiltKey {
 
-    // prk, puk, ssk
+    // prk, puk, sk
     private final KeyType keyType;
 
-    // ml-dsa, ml-kem, aes
+    // ml-dsa, ml-kem, aes, mac
     private final KeyAlgorithm keyAlgorithm;
 
     private byte[] keyVal;
     int keyLength;
 
-    public ServerKey(KeyType keyType, KeyAlgorithm keyAlgorithm) {
+    public QuiltKey(KeyType keyType, KeyAlgorithm keyAlgorithm) {
         this.keyType = keyType;
         this.keyAlgorithm = keyAlgorithm;
     }
