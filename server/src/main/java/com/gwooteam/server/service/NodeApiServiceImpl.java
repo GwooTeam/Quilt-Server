@@ -40,15 +40,21 @@ public class NodeApiServiceImpl implements NodeApiService {
         return key;
     }
 
-    @Override
-    public String generateNonce() {
-        return generateRandom(10);
+//    @Override
+    public String generateRandomString() {
+        return generateRandomString(10);
     }
+
+    @Override
+    public byte[] generateNonce() {
+        return generateRandomByte();
+    }
+
 
     // Save Nonce
     @Transactional
     @Override
-    public Boolean saveNonce(Long id, String nonce) {
+    public Boolean saveNonce(Long id, byte[] nonce) {
         // nonce가 있다면 메서드 호출 못하도록 구현 필요
         Node node = nodeRepository.findOne(id);
         node.setNonce(nonce);
@@ -61,7 +67,7 @@ public class NodeApiServiceImpl implements NodeApiService {
     public Boolean verifyNode(Long id, String nodeSign, String nodeMac) {
         // node가 보낸 sign과 mac을 검증하고 결과를 리턴한다.
         Node node = nodeRepository.findOne(id);
-        String nonce = node.getNonce();
+        byte[] nonce = node.getNonce();
 
         // 서버의 개인키 추출
         // ServerKey prk = new ServerKey(KeyType.PRIVATE_KEY, KeyAlgorithm.ML_DSA);
@@ -75,8 +81,8 @@ public class NodeApiServiceImpl implements NodeApiService {
     @Override
     public Certificates generateCertificates(String pubK_encrypt, String pubK_sign, String publicIP) {
 
-        String dsaSerial = generateRandom(10);
-        String kemSerial = generateRandom(10);
+        String dsaSerial = generateRandomString(10);
+        String kemSerial = generateRandomString(10);
         Certificates certificates = new Certificates(pubK_encrypt, pubK_sign, publicIP, dsaSerial, kemSerial);
 
         // 각 Certificate를 하나의 스트링으로 변환
@@ -90,7 +96,7 @@ public class NodeApiServiceImpl implements NodeApiService {
         return certificates;
     }
 
-    private static String generateRandom(Integer n) {
+    private static String generateRandomString(Integer n) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder nonce = new StringBuilder();
         Random random = new Random();
@@ -102,8 +108,15 @@ public class NodeApiServiceImpl implements NodeApiService {
         return nonce.toString();
     }
 
+    public static byte[] generateRandomByte() {
+        Random random = new Random();
+        byte[] randomBytes = new byte[16];
+        random.nextBytes(randomBytes);
+        return randomBytes;
+    }
+
     // MAC 인증 로직
-    private static Boolean verifyMac(String fetchNonce, String nodeMac) {
+    private static Boolean verifyMac(byte[] fetchNonce, String nodeMac) {
 
         // Server 측 MAC 계산
         String serverMac = "";

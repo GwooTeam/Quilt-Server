@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 // @Repository
@@ -27,5 +28,16 @@ public class NodeRepository {
 
     public List<Node> findByHostname(String hostname) {
         return this.em.createQuery("select n from Node n where n.hostname = :hostname", Node.class).setParameter("hostname", hostname).getResultList();
+    }
+
+    public Node findByID(String nodeID) {
+        try {
+            return this.em.createQuery("select n from Node n where n.nodeID = :nodeID", Node.class)
+                    .setParameter("nodeID", nodeID)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // 결과가 없을 때의 처리. 예를 들어 null 반환
+            return null;
+        }
     }
 }
