@@ -31,7 +31,6 @@ public class LoginController {
         if (node == null) {
             return "/nodes/loginNodeErrorForm";
         }
-        logger.debug("🩵" + form.getNodeID());
 
         if (node.getNodePW().equals(form.getNodePW())) {
             return "redirect:/nodes";
