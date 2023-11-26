@@ -41,4 +41,5 @@ public class NodeController {
         model.addAttribute("nodes", nodes); // test
         return "nodes/nodeList";
     }
+
 }

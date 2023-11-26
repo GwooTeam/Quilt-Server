@@ -3,15 +3,17 @@ package com.gwooteam.server.service;
 import com.gwooteam.server.domain.Node;
 import com.gwooteam.server.repository.NodeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+// @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NodeService {
+
     private final NodeRepository nodeRepository;
 
     @Transactional
@@ -36,14 +38,7 @@ public class NodeService {
         return this.nodeRepository.findOne(id);
     }
 
-    // Save Nonce
-    @Transactional
-    public void saveNonce(Long id, String nonce) {
-        // nonce가 있다면 메서드 호출 못하도록 구현 필요
-        Node node = nodeRepository.findOne(id);
-        node.setNonce(nonce);
-        this.nodeRepository.save(node);
-    }
+
 
     // Save EncryptPubK, SignPubK
     @Transactional
