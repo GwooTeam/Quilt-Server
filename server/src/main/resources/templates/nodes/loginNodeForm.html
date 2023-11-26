@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <form th:action="@{/nodes/login}" th:object="${form}" method="post">
+    <div class="form-group">
+      <label th:for="nodeID">nodeID</label>
+      <input type="text" th:field="*{nodeID}" class="form-control" placeholder="ID  ">
+    </div>
+    <div class="form-group">
+      <label th:for="nodePW">nodePW</label>
+      <input type="text" th:field="*{nodePW}" class="form-control" placeholder="Password  ">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+  <br/>
+</div> <!-- /container -->
+</body>
+</html>

@@ -32,12 +32,12 @@ public class Node {
     private String nodePW;
 
     // MAC, Nonce Verification
-    @Column(unique = true, length = 10)
-    private String nonce;
+    @Column(unique = true, length = 16)
+    private byte[] nonce;
 
     @NonNull
-    @Column(unique = true, length = 10)
-    private String mk;
+    @Column(unique = true, length = 16)
+    private byte[] mk;
 
     // Certificate Serial Number
     @Column(unique = true, length = 10)
@@ -90,19 +90,19 @@ public class Node {
         this.nodePW = nodePW;
     }
 
-    public String getNonce() {
+    public byte[] getNonce() {
         return nonce;
     }
 
-    public void setNonce(String nonce) {
+    public void setNonce(byte[] nonce) {
         this.nonce = nonce;
     }
 
-    public String getMk() {
+    public byte[] getMk() {
         return mk;
     }
 
-    public void setMk(String mk) {
+    public void setMk(byte[] mk) {
         this.mk = mk;
     }
 

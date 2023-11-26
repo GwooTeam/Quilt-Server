@@ -34,7 +34,7 @@ public class NodeApiController {
     // Nonce
     @PostMapping("/node/{id}/generateNonce")
     public ResponseEntity<SaveNonce> enrollNonce (@PathVariable("id") Long id) {
-        String nonce = nodeApiService.generateNonce(); // generateRandom(10);
+        byte[] nonce = nodeApiService.generateNonce(); // generateRandom(10);
         nodeApiService.saveNonce(id, nonce);
 
         SaveNonce saveNonce = new SaveNonce();
@@ -90,13 +90,13 @@ public class NodeApiController {
 
     @Data
     static class SaveNonce {
-        private String nonce;
+        private byte[] nonce;
 
-        public String getNonce() {
+        public byte[] getNonce() {
             return nonce;
         }
 
-        public void setNonce(String nonce) {
+        public void setNonce(byte[] nonce) {
             this.nonce = nonce;
         }
 

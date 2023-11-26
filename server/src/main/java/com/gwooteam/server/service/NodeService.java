@@ -38,6 +38,7 @@ public class NodeService {
         return this.nodeRepository.findOne(id);
     }
 
+    public Node findByID(String nodeID) { return this.nodeRepository.findByID(nodeID); }
 
 
     // Save EncryptPubK, SignPubK

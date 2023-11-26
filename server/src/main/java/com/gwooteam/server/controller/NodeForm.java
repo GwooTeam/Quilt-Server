@@ -10,7 +10,7 @@ public class NodeForm {
     private String ip;
     private String nodeID;
     private String nodePW;
-    private String nonce;
+    private byte[] nonce;
 
     public Long getId() {
         return id;
@@ -52,11 +52,11 @@ public class NodeForm {
         this.nodePW = nodePW;
     }
 
-    public String getNonce() {
+    public byte[] getNonce() {
         return nonce;
     }
 
-    public void setNonce(String nonce) {
+    public void setNonce(byte[] nonce) {
         this.nonce = nonce;
     }
 

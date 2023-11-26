@@ -28,4 +28,8 @@ public class NodeRepository {
     public List<Node> findByHostname(String hostname) {
         return this.em.createQuery("select n from Node n where n.hostname = :hostname", Node.class).setParameter("hostname", hostname).getResultList();
     }
+
+    public Node findByID(String nodeID) {
+        return this.em.createQuery("select n from Node n where n.nodeID = :nodeID", Node.class).setParameter("nodeID", nodeID).getSingleResult();
+    }
 }
