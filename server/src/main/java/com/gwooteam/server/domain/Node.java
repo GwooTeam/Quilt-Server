@@ -45,10 +45,10 @@ public class Node {
 
     // Node Key
     @Column(unique = true, length = 20)
-    private String encryptPubK;
+    private String encrypt_pubK;
 
     @Column(unique = true, length = 20)
-    private String signPubK;
+    private String sign_pubK;
 
     public Long getId() {
         return id;
@@ -115,18 +115,18 @@ public class Node {
     }
 
     public String getEncryptPubK() {
-        return encryptPubK;
+        return encrypt_pubK;
     }
 
     public void setEncryptPubK(String encryptPubK) {
-        this.encryptPubK = encryptPubK;
+        this.encrypt_pubK = encryptPubK;
     }
 
     public String getSignPubK() {
-        return signPubK;
+        return sign_pubK;
     }
 
     public void setSignPubK(String signPubK) {
-        this.signPubK = signPubK;
+        this.sign_pubK = signPubK;
     }
 }

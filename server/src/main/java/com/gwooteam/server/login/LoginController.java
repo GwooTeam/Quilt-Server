@@ -9,16 +9,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
 
     private final NodeService nodeService;
+    private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @GetMapping("/nodes/login")
     public String loginNode(Model model) {
         model.addAttribute("form", new LoginForm());
-        return "/nodes/loginNodeForm";
+        return "nodes/loginNodeForm";
     }
 
     @PostMapping("/nodes/login")
@@ -27,11 +31,12 @@ public class LoginController {
         if (node == null) {
             return "/nodes/loginNodeErrorForm";
         }
+        logger.debug("🩵" + form.getNodeID());
 
         if (node.getNodePW().equals(form.getNodePW())) {
-            return "loginSuccess";
+            return "redirect:/nodes";
         } else {
-            return "loginNodeErrorForm";
+            return "nodes/loginNodeErrorForm";
         }
     }
 }

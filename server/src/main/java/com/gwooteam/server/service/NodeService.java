@@ -45,8 +45,8 @@ public class NodeService {
     @Transactional
     public void savePubKeys(Long id, String encryptPubK, String signPubK) {
         Node node = nodeRepository.findOne(id);
-        node.setEncryptPubK(encryptPubK);
-        node.setSignPubK(signPubK);
+        node.setEncrypt_pubK(encryptPubK);
+        node.setSign_pubK(signPubK);
         this.nodeRepository.save(node);
     }
 }
