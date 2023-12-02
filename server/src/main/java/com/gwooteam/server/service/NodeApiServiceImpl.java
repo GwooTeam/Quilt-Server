@@ -42,7 +42,7 @@ public class NodeApiServiceImpl implements NodeApiService {
 
 //    @Override
     public String generateRandomString() {
-        return generateRandomString(10);
+        return generateRandomString(10); // ?? 코드 존재 의미를 모르겠음
     }
 
     @Override
@@ -71,6 +71,8 @@ public class NodeApiServiceImpl implements NodeApiService {
 
         // 서버의 개인키 추출
         // ServerKey prk = new ServerKey(KeyType.PRIVATE_KEY, KeyAlgorithm.ML_DSA);
+
+        // 전달받은 sign과 mac을 파일로 생성하고 nodeAuth에 파일 경로를 전달한다.
 
         Boolean verifySignResult = nodeAuthentication.verifySign("originFile", nodeSign);
         Boolean macRes = verifyMac(nonce, nodeMac);
