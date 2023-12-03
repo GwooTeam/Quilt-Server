@@ -28,7 +28,7 @@ public class NodeApiServiceImpl implements NodeApiService {
         QuiltKey key = new QuiltKey(KeyType.PUBLIC_KEY, KeyAlgorithm.ML_DSA);
 
         // 파일로부터 서버 key 읽어와야 함
-        Resource resource = new ClassPathResource("modules/ML-DSA/kyber_key.puk");
+        Resource resource = new ClassPathResource("modules/ML-KEM/data/kyber_key.puk");
         try {
             byte[] pukData = FileCopyUtils.copyToByteArray(resource.getInputStream());
             key.setKeyLength(pukData.length);
