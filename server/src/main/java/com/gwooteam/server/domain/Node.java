@@ -36,7 +36,7 @@ public class Node {
     private String nonce;
 
     @NonNull
-    @Column(unique = true, length = 16)
+    @Column(unique = true, length = 64)
     private String mk;
 
     // Certificate Serial Number
@@ -44,10 +44,10 @@ public class Node {
     private String serialNumber;
 
     // Node Key
-    @Column(unique = true, length = 20)
+    @Column(unique = true, length = 4000)
     private String encrypt_pubK;
 
-    @Column(unique = true, length = 20)
+    @Column(unique = true, length = 4000)
     private String sign_pubK;
 
     @Column(unique = true, length = 64)
