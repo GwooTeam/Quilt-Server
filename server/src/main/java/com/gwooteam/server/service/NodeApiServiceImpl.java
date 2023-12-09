@@ -5,6 +5,7 @@ import com.gwooteam.server.auth.KeyAlgorithm;
 import com.gwooteam.server.auth.KeyType;
 import com.gwooteam.server.domain.Node;
 import com.gwooteam.server.encryption.DataEncryption;
+import com.gwooteam.server.kem.KeyCapsulation;
 import com.gwooteam.server.repository.NodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -21,41 +22,94 @@ public class NodeApiServiceImpl implements NodeApiService {
 
     private final NodeRepository nodeRepository;
     private final NodeAuthentication nodeAuthentication;
+    private final KeyCapsulation keyCapsulation;
     private final DataEncryption dataEncryption;
 
     @Override
-    public QuiltKey getServerDsaPubKey() {
-        QuiltKey key = new QuiltKey(KeyType.PUBLIC_KEY, KeyAlgorithm.ML_DSA);
+    public QuiltKey getMacKey() {
+        QuiltKey key = new QuiltKey(KeyType.SECRET_KEY, KeyAlgorithm.MAC);
+        key.setKeyVal(nodeAuthentication.generateMacKey());
+        key.setKeyLength(32);
+        return key;
+    }
+
+    @Override
+    public QuiltKey getServerKemPubKey() {
+        QuiltKey key = new QuiltKey(KeyType.PUBLIC_KEY, KeyAlgorithm.ML_KEM);
 
         // 파일로부터 서버 key 읽어와야 함
         Resource resource = new ClassPathResource("modules/ML-KEM/data/kyber_key.puk");
         try {
             byte[] pukData = FileCopyUtils.copyToByteArray(resource.getInputStream());
             key.setKeyLength(pukData.length);
-            key.setKeyVal(pukData);
+
+            StringBuilder pukStr = new StringBuilder();
+            for(byte b: pukData)
+                pukStr.append(String.format("%02x", b));
+
+            key.setKeyVal(pukStr.toString());
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         return key;
     }
 
-//    @Override
-    public String generateRandomString() {
-        return generateRandomString(10); // ?? 코드 존재 의미를 모르겠음
+
+    @Override
+    public String generateNonce() {
+        return generateRandomString(10);
     }
 
     @Override
-    public byte[] generateNonce() {
-        return generateRandomByte();
+    public String encapsulate() {
+        String[] encapRes = keyCapsulation.encapsulate("serverPukVal");
+        return encapRes[1]; // capsule 데이터만 리턴
     }
 
+    @Override
+    public String decapsulate(Long id, String encapData) {
+
+        // get server prk
+        String sskVal;
+        Resource resource = new ClassPathResource("modules/ML-KEM/data/kyber_key.prk");
+        try {
+            // get server prk
+            byte[] prkData = FileCopyUtils.copyToByteArray(resource.getInputStream());
+
+            StringBuilder prkStrBuilder = new StringBuilder();
+            for(byte b: prkData)
+                prkStrBuilder.append(String.format("%02x", b));
+
+            String prkStr = prkStrBuilder.toString();
+
+            // decap
+            sskVal = keyCapsulation.decapsulate(prkStr, encapData);
+
+            // set ssk at node
+            Node node = nodeRepository.findOne(id);
+            node.setSsk(sskVal);
+            return sskVal;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public String encryptData(String sskVal, String originData) {
+        return dataEncryption.encrypt(sskVal, originData);
+    }
 
     // Save Nonce
     @Transactional
     @Override
-    public Boolean saveNonce(Long id, byte[] nonce) {
+    public Boolean saveNonce(Long id, String nonce) {
         // nonce가 있다면 메서드 호출 못하도록 구현 필요
+
+        // DB 부분. 별도 설정 필요.
         Node node = nodeRepository.findOne(id);
         node.setNonce(nonce);
         nodeRepository.save(node);
@@ -67,15 +121,15 @@ public class NodeApiServiceImpl implements NodeApiService {
     public Boolean verifyNode(Long id, String nodeSign, String nodeMac) {
         // node가 보낸 sign과 mac을 검증하고 결과를 리턴한다.
         Node node = nodeRepository.findOne(id);
-        byte[] nonce = node.getNonce();
+        String nonce = node.getNonce();
 
         // 서버의 개인키 추출
         // ServerKey prk = new ServerKey(KeyType.PRIVATE_KEY, KeyAlgorithm.ML_DSA);
 
         // 전달받은 sign과 mac을 파일로 생성하고 nodeAuth에 파일 경로를 전달한다.
 
-        Boolean verifySignResult = nodeAuthentication.verifySign("originFile", nodeSign);
-        Boolean macRes = verifyMac(nonce, nodeMac);
+        Boolean verifySignResult = nodeAuthentication.verifySign(id, "originFile", nodeSign);
+        Boolean macRes = nodeAuthentication.verifyIntegrity(id, nonce, nodeMac);
 
         return (verifySignResult && macRes);
     }
@@ -110,24 +164,6 @@ public class NodeApiServiceImpl implements NodeApiService {
         return nonce.toString();
     }
 
-    public static byte[] generateRandomByte() {
-        Random random = new Random();
-        byte[] randomBytes = new byte[16];
-        random.nextBytes(randomBytes);
-        return randomBytes;
-    }
 
-    // MAC 인증 로직
-    private static Boolean verifyMac(byte[] fetchNonce, String nodeMac) {
-
-        // Server 측 MAC 계산
-        String serverMac = "";
-
-        if (nodeMac ==  serverMac) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
-    }
 
 }

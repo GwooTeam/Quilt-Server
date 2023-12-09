@@ -3,7 +3,9 @@
 #include <string.h>
 #include "nsc_api.h"
 
-void mac_keygen(const char* mackey_path) {
+#include "quilt_api.h"
+
+void mac_keygen_raw() {
 
     NT_ULONG kg_type = NOB_CTX_AES_KEY_GEN; // NOB_CTX_SYM_KEY_GEN;
     NT_ULONG skey_type = NOB_SECRET_KEY;
@@ -44,25 +46,7 @@ void mac_keygen(const char* mackey_path) {
 
 
     /**
-     * 1. 파일 경로 설정
-    */
-    char* key_file_path = NULL;
-    int alloc_flag = 0;
-    if(mackey_path) {
-        size_t key_path_len = strlen(mackey_path);
-        key_file_path = (char*)calloc(key_path_len+50, 1);
-        alloc_flag = 1;
-
-        strncpy(key_file_path, mackey_path, key_path_len);
-        strcat(key_file_path, "/mac_key.mk");
-    }
-    else {
-        key_file_path = "mac_key.mk";
-    }
-
-
-    /**
-     * 2. mac 키 생성
+     * 1. mac 키 생성
     */
     if((ret = NS_generate_key(&keygenctx,(NT_OBJECT_PTR)&oKey))!=NRC_OK)
     {
@@ -74,37 +58,21 @@ void mac_keygen(const char* mackey_path) {
 
 
     /**
-     * 3. 키 파일 저장
+     * 2. 키 출력
     */
-    FILE* key_file = fopen(key_file_path, "wb");
-    if(key_file == NULL) {
-        puts("failed to generate key file..");
-        goto err;
-    }
 
-    // fwrite(&oKey[1].type, sizeof(NT_ULONG), 1, key_file);
-    // fwrite(&oKey[1].ulValueLen, sizeof(NT_ULONG), 1, key_file);
-    fwrite(oKey[1].pValue, oKey[1].ulValueLen, 1, key_file);
-    // fwrite(&oKey[1].bSensitive, sizeof(NT_BBOOL), 1, key_file);
-    // fwrite(&oKey[1].bAlloc, sizeof(NT_BBOOL), 1, key_file);
-    fclose(key_file);
+    printVal("mkey=", oKey[1].pValue, oKey[1].ulValueLen);
 
     // printf("mac key type: %d\n", oKey[1].type);
     // printf("mac key valLen: %d\n", oKey[1].ulValueLen);
     // printf("mac key bSensitive: %d\n", oKey[1].bSensitive);
     // printf("mac key bAlloc: %d\n", oKey[1].bAlloc);
 
-    puts("generate mac key file complete.");
-
     // NS_hex_dump(oKey[1].pValue, oKey[1].ulValueLen, "key data");
 
 
 err:
     NS_clear_object(&oKey,2);
-
-    if(alloc_flag) free(key_file_path);
-    
-
     // return ret;
 
 }

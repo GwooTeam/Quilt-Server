@@ -7,6 +7,10 @@
 #include "mac_sign.h"
 #include "mac_verify.h"
 
+#include "mac_keygen_raw.h"
+#include "mac_sign_raw.h"
+#include "mac_verify_raw.h"
+
 int main(int argc, char* argv[]) {
 
     int option; // switch 대상 변수
@@ -15,6 +19,9 @@ int main(int argc, char* argv[]) {
     unsigned int flag_keygen = 0;
     unsigned int flag_sign = 0;
     unsigned int flag_verify = 0;
+
+    unsigned int flag_file = 0;
+    unsigned int flag_raw = 0;
 
     // args. must be NULL.
     char* key = NULL;
@@ -26,7 +33,7 @@ int main(int argc, char* argv[]) {
     // struct option { 옵션이름, 값 여부, 처리결과 플래그 포인터, 옵션 식별 정수(문자) }
     struct option long_options[] = {
         {"keygen", no_argument, &flag_keygen, 'a'}, // mac 키 생성
-        {"sign", no_argument, &flag_sign, 'b'}, // mac 해시코드 생성
+        {"hash", no_argument, &flag_sign, 'b'}, // mac 해시코드 생성
         {"verify", no_argument, &flag_verify, 'c'}, // mac 해시코드 검증
 
         {"key", required_argument, 0, '1'}, // 사용할 키
@@ -37,7 +44,7 @@ int main(int argc, char* argv[]) {
     
 
     // 짧은 옵션(-)은 그냥 여기서 switch case로 넣으면 됨. ab: 문자열이랑 같이.
-    while ((option = getopt_long(argc, argv, "", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "fr", long_options, NULL)) != -1) {
         switch (option) {
         // key
         case '1':
@@ -54,13 +61,20 @@ int main(int argc, char* argv[]) {
             result = optarg;
             break;
 
+        // file based
+        case 'f':
+            flag_file = 1;
+            break;
+
+        // raw data based
+        case 'r':
+            flag_raw = 1;
+            break;
+
         // 옵션 못 알아먹었을 때
         case '?':
             printf("into case ?\n");
-            if(optopt == 'b') {
-                fprintf(stderr, "옵션 -%c는 값이 필요합니다.\n", optopt);
-            }
-            else if (isprint(optopt)) {
+            if (isprint(optopt)) {
                 fprintf(stderr, "알 수 없는 옵션: %c\n", optopt);
             }
             else {
@@ -85,28 +99,54 @@ int main(int argc, char* argv[]) {
     // printf("result: %s\n", result);
     int exit_code = 1;
 
-    if(flag_keygen) {
-        // puts("flag_keygen activated!");
-        mac_keygen(result);
-    }
-    else if(flag_sign) {
-        // puts("flag_sign activated!");
-        if(key==NULL) {
-            fprintf(stderr, "err: no key provided.\n");
-            goto err;
+    if(flag_file) {
+        if(flag_keygen) {
+            // puts("flag_keygen activated!");
+            mac_keygen(result);
         }
-        if(target==NULL) {
-            fprintf(stderr, "err: no data provided.\n");
-            goto err;
+        else if(flag_sign) {
+            // puts("flag_sign activated!");
+            if(key==NULL) {
+                fprintf(stderr, "err: no key provided.\n");
+                goto err;
+            }
+            if(target==NULL) {
+                fprintf(stderr, "err: no data provided.\n");
+                goto err;
+            }
+            exit_code = mac_sign(key, target, result);
         }
-        exit_code = mac_sign(key, target, result);
-    }
-    else if(flag_verify) {
-        puts("flag_verify activated!");
-        exit_code = mac_verify(key, target, result);
-    }
-    else {
-        fprintf(stderr, "err: no options activated\n");
+        else if(flag_verify) {
+            puts("flag_verify activated!");
+            exit_code = mac_verify(key, target, result);
+        }
+        else {
+            fprintf(stderr, "err: no options activated\n");
+        }
+
+    } else if (flag_raw) {
+        if(flag_keygen) {
+            mac_keygen_raw();
+            return 0;
+        }
+        else if(flag_sign) {
+            if(key==NULL) {
+                fprintf(stderr, "err: no key provided.\n");
+                goto err;
+            }
+            if(target==NULL) {
+                fprintf(stderr, "err: no data provided.\n");
+                goto err;
+            }
+            exit_code = mac_sign_raw(key, target);
+        }
+        else if(flag_verify) {
+            puts("flag_verify activated!");
+            exit_code = mac_verify_raw(key, target, result);
+        }
+        else {
+            fprintf(stderr, "err: no options activated\n");
+        }
     }
 
 

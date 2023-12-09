@@ -8,7 +8,7 @@ public class QuiltKey {
     // ml-dsa, ml-kem, aes, mac
     private final KeyAlgorithm keyAlgorithm;
 
-    private byte[] keyVal;
+    private String keyVal;
     int keyLength;
 
     public QuiltKey(KeyType keyType, KeyAlgorithm keyAlgorithm) {
@@ -24,11 +24,11 @@ public class QuiltKey {
         return keyAlgorithm;
     }
 
-    public byte[] getKeyVal() {
+    public String getKeyVal() {
         return keyVal;
     }
 
-    public void setKeyVal(byte[] keyVal) {
+    public void setKeyVal(String keyVal) {
         this.keyVal = keyVal;
     }
 

@@ -33,11 +33,11 @@ public class Node {
 
     // MAC, Nonce Verification
     @Column(unique = true, length = 16)
-    private byte[] nonce;
+    private String nonce;
 
     @NonNull
     @Column(unique = true, length = 16)
-    private byte[] mk;
+    private String mk;
 
     // Certificate Serial Number
     @Column(unique = true, length = 10)
@@ -50,83 +50,8 @@ public class Node {
     @Column(unique = true, length = 20)
     private String sign_pubK;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(unique = true, length = 64)
+    private String ssk;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public String getPublicIP() {
-        return publicIP;
-    }
-
-    public void setPublicIP(String publicIP) {
-        this.publicIP = publicIP;
-    }
-
-    public String getNodeID() {
-        return nodeID;
-    }
-
-    public void setNodeID(String nodeID) {
-        this.nodeID = nodeID;
-    }
-
-    public String getNodePW() {
-        return nodePW;
-    }
-
-    public void setNodePW(String nodePW) {
-        this.nodePW = nodePW;
-    }
-
-    public byte[] getNonce() {
-        return nonce;
-    }
-
-    public void setNonce(byte[] nonce) {
-        this.nonce = nonce;
-    }
-
-    public byte[] getMk() {
-        return mk;
-    }
-
-    public void setMk(byte[] mk) {
-        this.mk = mk;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String getEncryptPubK() {
-        return encrypt_pubK;
-    }
-
-    public void setEncryptPubK(String encryptPubK) {
-        this.encrypt_pubK = encryptPubK;
-    }
-
-    public String getSignPubK() {
-        return sign_pubK;
-    }
-
-    public void setSignPubK(String signPubK) {
-        this.sign_pubK = signPubK;
-    }
 }

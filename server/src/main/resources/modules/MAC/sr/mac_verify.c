@@ -46,16 +46,15 @@ int mac_verify(const char* mackey_path, const char* data_path, const char* sign_
     // printf("current status = %d\n", NS_get_state());
 
 
-
     /**
      * 1. mac 키 추출
      * 파일로부터 mac 키를 가져옴
     */
 
-    NT_ULONG_PTR attr_type = (NT_ULONG_PTR)calloc(sizeof(NT_ULONG), 1);
-    NT_ULONG_PTR attr_ValLen = (NT_ULONG_PTR)calloc(sizeof(NT_ULONG), 1);
-    NT_BBOOL* attr_bSensitive = (NT_BBOOL*)calloc(sizeof(NT_BBOOL), 1);
-    NT_BBOOL* attr_bAlloc = (NT_BBOOL*)calloc(sizeof(NT_BBOOL), 1);
+    // NT_ULONG_PTR attr_type = (NT_ULONG_PTR)calloc(sizeof(NT_ULONG), 1);
+    // NT_ULONG_PTR attr_ValLen = (NT_ULONG_PTR)calloc(sizeof(NT_ULONG), 1);
+    // NT_BBOOL* attr_bSensitive = (NT_BBOOL*)calloc(sizeof(NT_BBOOL), 1);
+    // NT_BBOOL* attr_bAlloc = (NT_BBOOL*)calloc(sizeof(NT_BBOOL), 1);
 
     FILE* key_file = fopen(mackey_path, "rb");
     if(key_file == NULL) {
@@ -64,23 +63,23 @@ int mac_verify(const char* mackey_path, const char* data_path, const char* sign_
     }
 
     // 데이터 읽기
-    fread(attr_type, sizeof(NT_ULONG), 1, key_file);
-    fread(attr_ValLen, sizeof(NT_ULONG), 1, key_file);
-    NT_VOID_PTR attr_pValue = (NT_VOID_PTR)calloc(*attr_ValLen, 1);
+    // fread(attr_type, sizeof(NT_ULONG), 1, key_file);
+    // fread(attr_ValLen, sizeof(NT_ULONG), 1, key_file);
+    NT_VOID_PTR attr_pValue = (NT_VOID_PTR)calloc(32, 1);
 
-    fread(attr_pValue, *attr_ValLen, 1, key_file);
-    fread(attr_bSensitive, sizeof(NT_BBOOL), 1, key_file);
-    fread(attr_bAlloc, sizeof(NT_BBOOL), 1, key_file);
+    fread(attr_pValue, 32, 1, key_file);
+    // fread(attr_bSensitive, sizeof(NT_BBOOL), 1, key_file);
+    // fread(attr_bAlloc, sizeof(NT_BBOOL), 1, key_file);
 
     // 오브젝트에 데이터 복사
-    oKey[1].type = *attr_type;
-    oKey[1].ulValueLen = *attr_ValLen;
+    oKey[1].type = NAT_VALUE;
+    oKey[1].ulValueLen = 32;
 
-    oKey[1].pValue = (NT_VOID_PTR)calloc(*attr_ValLen, 1);
-    memcpy(oKey[1].pValue, attr_pValue, *attr_ValLen);
+    oKey[1].pValue = (NT_VOID_PTR)calloc(32, 1);
+    memcpy(oKey[1].pValue, attr_pValue, 32);
     
-    oKey[1].bSensitive = *attr_bSensitive;
-    oKey[1].bAlloc = *attr_bAlloc;
+    oKey[1].bSensitive = TRUE;
+    oKey[1].bAlloc = TRUE;
 
     // check ssk
     // NS_hex_dump(oKey[1].pValue, oKey[1].ulValueLen, (NT_BYTE_PTR) "mac key");
@@ -100,34 +99,34 @@ int mac_verify(const char* mackey_path, const char* data_path, const char* sign_
 
     // 데이터 담아둘 임시변수 초기화
     puts("read data from cipher file..");
-    memset(attr_type, 0, sizeof(NT_ULONG));
+    // memset(attr_type, 0, sizeof(NT_ULONG));
     // memset(attr_pValue, 0, *attr_ValLen);
-    memset(attr_ValLen, 0, sizeof(NT_ULONG));
-    memset(attr_bSensitive, 0, sizeof(NT_BBOOL));
-    memset(attr_bAlloc, 0, sizeof(NT_BBOOL));
+    // memset(attr_ValLen, 0, sizeof(NT_ULONG));
+    // memset(attr_bSensitive, 0, sizeof(NT_BBOOL));
+    // memset(attr_bAlloc, 0, sizeof(NT_BBOOL));
     free(attr_pValue);
 
     // 해시코드 읽어오기
-    fread(attr_type, sizeof(NT_ULONG), 1, sign_file);
-    fread(attr_ValLen, sizeof(NT_ULONG), 1, sign_file);
+    // fread(attr_type, sizeof(NT_ULONG), 1, sign_file);
+    // fread(attr_ValLen, sizeof(NT_ULONG), 1, sign_file);
 
-    attr_pValue = (NT_VOID_PTR)calloc(*attr_ValLen, 1);
-    fread(attr_pValue, *attr_ValLen, 1, sign_file);
+    attr_pValue = (NT_VOID_PTR)calloc(16, 1);
+    fread(attr_pValue, 16, 1, sign_file);
 
-    fread(attr_bSensitive, sizeof(NT_BBOOL), 1, sign_file);
-    fread(attr_bAlloc, sizeof(NT_BBOOL), 1, sign_file);
+    // fread(attr_bSensitive, sizeof(NT_BBOOL), 1, sign_file);
+    // fread(attr_bAlloc, sizeof(NT_BBOOL), 1, sign_file);
     fclose(sign_file);
     printf("success to read capsulated file.\n");
 
     // oEncryptedData에 할당
-    oMacData[1].type = *attr_type;
-    oMacData[1].ulValueLen = *attr_ValLen;
+    oMacData[1].type = NAT_VALUE;
+    oMacData[1].ulValueLen = 16;
 
-    oMacData[1].pValue = (NT_VOID_PTR)calloc(*attr_ValLen, 1);
-    memcpy(oMacData[1].pValue, attr_pValue, *attr_ValLen);
+    oMacData[1].pValue = (NT_VOID_PTR)calloc(16, 1);
+    memcpy(oMacData[1].pValue, attr_pValue, 16);
 
-    oMacData[1].bSensitive = *attr_bSensitive;
-    oMacData[1].bAlloc = *attr_bAlloc;
+    oMacData[1].bSensitive = TRUE;
+    oMacData[1].bAlloc = TRUE;
 
     // check oMacData
     // NS_hex_dump(oMacData[1].pValue, oMacData[1].ulValueLen, (NT_BYTE_PTR) "mac data");
@@ -177,8 +176,6 @@ int mac_verify(const char* mackey_path, const char* data_path, const char* sign_
     // NS_hex_dump(oData[1].pValue, oData[1].ulValueLen, (NT_BYTE_PTR) "source data");
     
 
-
-
     /**
      * 4. mac 검증 수행
      */
@@ -195,7 +192,7 @@ int mac_verify(const char* mackey_path, const char* data_path, const char* sign_
         goto err;
     }
     else {
-        printf("success verify mac[all]\n");
+        printf("success verify mac\n");
     }
 
     exit_code = 0;
@@ -206,11 +203,11 @@ err:
     NS_clear_object(&oMacData,2);
     NS_clear_object(&oData,2);
 
-    free(attr_type);
-    free(attr_ValLen);
+    // free(attr_type);
+    // free(attr_ValLen);
     free(attr_pValue);
-    free(attr_bSensitive);
-    free(attr_bAlloc);
+    // free(attr_bSensitive);
+    // free(attr_bAlloc);
 
     return exit_code;
 

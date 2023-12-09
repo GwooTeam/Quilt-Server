@@ -3,9 +3,11 @@ package com.gwooteam.server.auth;
 public interface NodeAuthentication {
 
     Boolean signKeygen();
+
+    String generateMacKey();
     // 서명 검증
-    Boolean verifySign(String originFilePath, String signFilePath);
+    Boolean verifySign(Long id, String dataVal, String signVal);
     // 무결성 검증
-    Boolean verifyIntegrity(String originFilePath, String signFilePath);
+    Boolean verifyIntegrity(Long id, String dataVal, String signVal);
 
 }

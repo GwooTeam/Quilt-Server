@@ -5,7 +5,9 @@ import com.gwooteam.server.auth.QuiltKey;
 import com.gwooteam.server.service.NodeApiService;
 import com.gwooteam.server.service.NodeService;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,24 +24,40 @@ public class NodeApiController {
     private final NodeService nodeService;
     private final NodeApiService nodeApiService;
 
+
+    @PostMapping("/node/requestMacKey")
+    public ResponseEntity<QuiltKey> getMacKey() {
+        QuiltKey key = nodeApiService.getMacKey();
+        return ResponseEntity.ok(key);
+    }
+
+
     // ServerPubKey
     @PostMapping("/node/requestSvrPubK")
     public ResponseEntity<QuiltKey> getServerPubKey() {
-        QuiltKey key = nodeApiService.getServerDsaPubKey();
+        QuiltKey key = nodeApiService.getServerKemPubKey();
+        String keyVal = key.getKeyVal();
         return ResponseEntity.ok(key);
-//        FetchSvrPubK svrPubK = new FetchSvrPubK();
-//        return ResponseEntity.ok(svrPubK);
     }
 
 
     // Nonce
     @PostMapping("/node/{id}/generateNonce")
-    public ResponseEntity<SaveNonce> enrollNonce (@PathVariable("id") Long id) {
-        byte[] nonce = nodeApiService.generateNonce(); // generateRandom(10);
-        nodeApiService.saveNonce(id, nonce);
+    public ResponseEntity<SaveNonce> enrollNonce(@PathVariable("id") Long id, @RequestBody EncapData data) {
+        String capVal = data.getCapVal();
+        System.out.println("controller - capVal = " + capVal);
+        String sskVal = nodeApiService.decapsulate(id, capVal);
+        System.out.println("controller - sskVal = " + sskVal);
 
+        String nonce = nodeApiService.generateNonce();
+        // nodeApiService.saveNonce(id, nonce); repo(db) 코드라 주석처리함.
+
+        // nonce를 암호화해서 전달
+        String encNonce = nodeApiService.encryptData(sskVal, nonce);
+
+        // 객체로 만들어서 response
         SaveNonce saveNonce = new SaveNonce();
-        saveNonce.setNonce(nonce);
+        saveNonce.setNonce(encNonce);
 
         return ResponseEntity.ok(saveNonce);
     }
@@ -87,16 +106,16 @@ public class NodeApiController {
 //    }
 
 
-
+    // http에 리턴할 클래스
     @Data
     static class SaveNonce {
-        private byte[] nonce;
+        private String nonce;
 
-        public byte[] getNonce() {
+        public String getNonce() {
             return nonce;
         }
 
-        public void setNonce(byte[] nonce) {
+        public void setNonce(String nonce) {
             this.nonce = nonce;
         }
 
@@ -154,6 +173,12 @@ public class NodeApiController {
             this.nodePublicIP = nodePublicIP;
         }
 
+    }
+
+    @Data
+    @Getter @Setter
+    static class EncapData {
+        private String capVal;
     }
 
 //    @Data

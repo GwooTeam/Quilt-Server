@@ -4,8 +4,12 @@ public interface DigitalSignature {
 
     public Boolean keygen();
 
-    public Boolean createSign(String filePath);
+    public Boolean createSignFile(String filePath);
 
-    public Boolean verifySign(String originFilePath, String SignFilePath);
+    public String createSignStr(String data);
+
+    public Boolean verifySignFile(Long id, String originFilePath, String SignFilePath);
+
+    public Boolean verifySignStr(Long id, String originData, String signData);
 
 }

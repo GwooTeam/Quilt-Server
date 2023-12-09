@@ -2,8 +2,8 @@ package com.gwooteam.server.encryption;
 
 public interface DataEncryption {
 
-    Boolean encrypt(String keyPath, String dataPath, String encPath);
+    String encrypt(String keyVal, String dataVal);
 
-    Boolean decrypt(String keyPath, String encPath, String dataPath);
+    String decrypt(String keyVal, String encVal);
 
 }

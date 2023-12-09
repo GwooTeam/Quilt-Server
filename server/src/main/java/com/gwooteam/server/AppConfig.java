@@ -36,7 +36,7 @@ public class AppConfig {
 
     @Bean
     public DigitalSignature digitalSignature() {
-        return new MldsaDigitalSignature();
+        return new MldsaDigitalSignature(nodeRepository());
     }
 
     @Bean
@@ -51,7 +51,7 @@ public class AppConfig {
 
     @Bean
     public NodeAuthentication nodeAuthentication() {
-        return new NodeAuthenticationImpl(digitalSignature(), integrity());
+        return new NodeAuthenticationImpl(nodeRepository(), digitalSignature(), integrity());
     }
 
     @Bean

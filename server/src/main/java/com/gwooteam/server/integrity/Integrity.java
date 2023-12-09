@@ -2,8 +2,10 @@ package com.gwooteam.server.integrity;
 
 public interface Integrity {
 
-    Boolean createHashCode(String filePath);
+    String macKeygen();
 
-    Boolean verifyIntegrity(String dataPath, String signPath);
+    String createHashCode(String macKey, String dataVal);
+
+    Boolean verifyIntegrity(String macKey, String dataVal, String signVal);
 
 }
