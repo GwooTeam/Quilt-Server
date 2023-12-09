@@ -9,11 +9,12 @@ CREATE TABLE node_info (
     nodePW VARCHAR(10) NOT NULL,
     hostname VARCHAR(10) NOT NULL,
     publicIP VARCHAR(15) NOT NULL,
-    nonce BINARY(16),
-    mk BINARY(16),
+    nonce VARCHAR(16),
+    mk VARCHAR(64),
     serial_number VARCHAR(10),
-    encrypt_pubK VARCHAR(20),
-    sign_pubK VARCHAR(20),
+    encrypt_pubK VARCHAR(4000),
+    sign_pubK VARCHAR(4000),
+    ssk VARCHAR(64) 
     PRIMARY KEY (id)
 ) ENGINE=InnODB DEFAULT CHARSET=utf8;
 
