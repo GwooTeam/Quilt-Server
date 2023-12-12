@@ -107,7 +107,7 @@ void dilithium_sign_raw(const char* data_val, const char* prk_val)
         {NAT_DILITHIUM_IS_RANDOMIZING_SIGNING, NULL, 0, FALSE, FALSE},
         {NAT_RANDOM_FUNCTION_TYPE, NULL, 0, FALSE, FALSE}};
 
-    NT_BYTE DataBuf[10130]; // 서명 대상 데이터를 저장할 배열, 충분한 크기로 설정
+    NT_BYTE DataBuf[10130] = {0,}; // 서명 대상 데이터를 저장할 배열, 충분한 크기로 설정
     NT_OBJECT oData = {
         {NAT_OBJECT_TYPE, &data_type, sizeof(data_type), FALSE, FALSE},
         {NAT_VALUE, DataBuf, (NT_ULONG)sizeof(DataBuf), FALSE, FALSE},
@@ -159,8 +159,16 @@ void dilithium_sign_raw(const char* data_val, const char* prk_val)
     }
 
 
+    size_t data_len = strlen(data_val);
+    if(data_len <0) {
+        fprintf(stderr, "failed to get origin data.\n");
+        goto err;
+    }
+    strncpy(DataBuf, data_val, data_len);
+    DataBuf[data_len] = '\0';
+
     oData[1].type = NAT_VALUE;
-    oData[1].pValue = (NT_VOID_PTR)data_val;
+    // oData[1].pValue = (NT_VOID_PTR)data_val;
     oData[1].ulValueLen = strlen(data_val);
     oData[1].bAlloc = FALSE;
     oData[1].bSensitive = FALSE;
@@ -225,7 +233,7 @@ int dilithium_verify_raw(const char* data_val, const char* sign_val, const char*
         {NAT_DILITHIUM_IS_RANDOMIZING_SIGNING, NULL, 0, FALSE, FALSE},
         {NAT_RANDOM_FUNCTION_TYPE, NULL, 0, FALSE, FALSE}};
 
-    NT_BYTE DataBuf[10130]; // 문자열을 저장할 배열, 충분한 크기로 설정
+    NT_BYTE DataBuf[10130] = {0,}; // 문자열을 저장할 배열, 충분한 크기로 설정
     NT_OBJECT oData = {
         {NAT_OBJECT_TYPE, &data_type, sizeof(data_type), FALSE, FALSE},
         {NAT_VALUE, DataBuf, (NT_ULONG)sizeof(DataBuf), FALSE, FALSE},
@@ -273,8 +281,13 @@ int dilithium_verify_raw(const char* data_val, const char* sign_val, const char*
    
 
     /*원본 데이터 읽어오기*/
+
+    size_t data_val_len = strlen(data_val);
+    strncpy(DataBuf, data_val, data_val_len);
+    DataBuf[data_val_len] = '\0';
+    
     oData[1].type = NAT_VALUE;
-    oData[1].pValue = (NT_VOID_PTR)data_val;
+    // oData[1].pValue = (NT_VOID_PTR)data_val;
     oData[1].ulValueLen = strlen(data_val);
     oData[1].bAlloc = FALSE;
     oData[1].bSensitive = FALSE;

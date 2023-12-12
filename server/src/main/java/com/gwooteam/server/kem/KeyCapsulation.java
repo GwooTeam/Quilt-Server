@@ -4,8 +4,8 @@ public interface KeyCapsulation {
 
     Boolean keygen();
 
-    Boolean encapsulate(String pukPath, String capPath);
+    String[] encapsulate(String pukVal);
 
-    Boolean decapsulate(String prkPath, String capPath, String sskPath);
+    String decapsulate(String prkVal, String capVal);
 
 }

@@ -6,6 +6,8 @@ import com.gwooteam.server.encryption.DataEncryption;
 import com.gwooteam.server.encryption.MlKemDataEncryption;
 import com.gwooteam.server.integrity.Integrity;
 import com.gwooteam.server.integrity.MacIntegrity;
+import com.gwooteam.server.kem.KeyCapsulation;
+import com.gwooteam.server.kem.MlKemKeyCapsulation;
 import com.gwooteam.server.repository.NodeRepository;
 import com.gwooteam.server.service.NodeApiService;
 import com.gwooteam.server.service.NodeApiServiceImpl;
@@ -36,7 +38,7 @@ public class AppConfig {
 
     @Bean
     public DigitalSignature digitalSignature() {
-        return new MldsaDigitalSignature();
+        return new MldsaDigitalSignature(nodeRepository());
     }
 
     @Bean
@@ -50,8 +52,13 @@ public class AppConfig {
     }
 
     @Bean
+    public KeyCapsulation keyCapsulation() {
+        return new MlKemKeyCapsulation(nodeRepository());
+    }
+
+    @Bean
     public NodeAuthentication nodeAuthentication() {
-        return new NodeAuthenticationImpl(digitalSignature(), integrity());
+        return new NodeAuthenticationImpl(nodeRepository(), digitalSignature(), integrity());
     }
 
     @Bean
@@ -61,7 +68,7 @@ public class AppConfig {
 
     @Bean
     public NodeApiService nodeApiService() {
-        return new NodeApiServiceImpl(nodeRepository(), nodeAuthentication(), dataEncryption());
+        return new NodeApiServiceImpl(nodeRepository(), nodeAuthentication(), keyCapsulation(), dataEncryption());
     }
 
 }

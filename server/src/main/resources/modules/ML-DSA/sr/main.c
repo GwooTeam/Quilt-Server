@@ -75,7 +75,10 @@ int main(int argc, char *argv[]) {
         }
 
         // printf("EOF\n");
-        if(res == 0) return 0;
+        if(res == 0) {
+            puts("success to verify.");
+            return 0;
+        }
         else return 1;
     }
 

@@ -89,9 +89,10 @@ void kyber_encrypt_raw(const char* ssk_val, const char* plain_val) {
 
     unsigned char* tmpBuf = (char*)malloc(padding);
     int i;
-    for(i=0; i<padding; i++) {
+    for(i=0; i<padding-1; i++) {
         tmpBuf[i] = '\0';
     }
+    tmpBuf[plain_val_len + padding -1] = '\0';
 
     strcat(plain_val_pad, tmpBuf);
 
@@ -140,9 +141,8 @@ void kyber_encrypt_raw(const char* ssk_val, const char* plain_val) {
      */
 
     printVal("enc=", (unsigned char*)oEncryptedData[1].pValue, oEncryptedData[1].ulValueLen);
-
+    fprintf(stdout, "length=%ld", plain_val_len);
     
-
 
 err:
     NS_clear_object(&oKey, 2);
