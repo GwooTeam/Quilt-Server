@@ -1,47 +1,67 @@
 package com.gwooteam.server.auth;
+import lombok.Getter;
 
-import com.gwooteam.server.api.NodeApiController;
-
+@Getter
 public class Certificates {
 
-    private final CertificateEncrypt certificateEncrypt;
-    private final CertificateSign certificateSign;
+    private String serialNumber;
+    private String publicIP;
+    private String kemPuk;
+    private String dsaPuk;
 
-    public Certificates(String pubK_sign, String pubK_encrpyt, String publicIP, String dsaSerial, String kemSerial) {
-        this.certificateSign = new CertificateSign(dsaSerial, pubK_sign, publicIP);
-        this.certificateEncrypt = new CertificateEncrypt(kemSerial, pubK_sign, publicIP);
+    public Certificates(String serialNumber, String publicIP, String kemPuk, String dsaPuk) {
+        this.serialNumber = serialNumber;
+        this.publicIP = publicIP;
+        this.kemPuk = kemPuk;
+        this.dsaPuk = dsaPuk;
     }
 
-    public CertificateEncrypt getCertificateEncrypt() {
-        return certificateEncrypt;
+    public void setKemPuk(String kemPuk) {
+        this.kemPuk = kemPuk;
     }
 
-    public CertificateSign getCertificateSign() {
-        return certificateSign;
+    public void setDsaPuk(String dsaPuk) {
+        this.dsaPuk = dsaPuk;
     }
 
-    private static class CertificateSign {
-        public CertificateSign(String serialNumber, String pubK_sign, String publicIP) {
-            this.serialNumber = serialNumber;
-            this.pubK_sign = pubK_sign;
-            this.publicIP = publicIP;
-        }
+    // private final CertificateEncrypt certificateEncrypt;
+    // private final CertificateSign certificateSign;
 
-        private String serialNumber;
-        private String pubK_sign;
-        private String publicIP;
-    }
+    // public Certificates(String pubK_sign, String pubK_encrpyt, String publicIP, String dsaSerial, String kemSerial) {
+    //     this.certificateSign = new CertificateSign(dsaSerial, pubK_sign, publicIP);
+    //     this.certificateEncrypt = new CertificateEncrypt(kemSerial, pubK_sign, publicIP);
+    // }
 
-    private static class CertificateEncrypt {
-        public CertificateEncrypt(String serialNumber, String pubK_encrypt, String publicIP) {
-            this.serialNumber = serialNumber;
-            this.pubK_encrypt = pubK_encrypt;
-            this.publicIP = publicIP;
-        }
+    // public CertificateEncrypt getCertificateEncrypt() {
+    //     return certificateEncrypt;
+    // }
 
-        private String serialNumber;
-        private String pubK_encrypt;
-        private String publicIP;
-    }
+    // public CertificateSign getCertificateSign() {
+    //     return certificateSign;
+    // }
+
+    // private static class CertificateSign {
+    //     public CertificateSign(String serialNumber, String pubK_sign, String publicIP) {
+    //         this.serialNumber = serialNumber;
+    //         this.pubK_sign = pubK_sign;
+    //         this.publicIP = publicIP;
+    //     }
+
+    //     private String serialNumber;
+    //     private String pubK_sign;
+    //     private String publicIP;
+    // }
+
+    // private static class CertificateEncrypt {
+    //     public CertificateEncrypt(String serialNumber, String pubK_encrypt, String publicIP) {
+    //         this.serialNumber = serialNumber;
+    //         this.pubK_encrypt = pubK_encrypt;
+    //         this.publicIP = publicIP;
+    //     }
+
+    //     private String serialNumber;
+    //     private String pubK_encrypt;
+    //     private String publicIP;
+    // }
 
 }

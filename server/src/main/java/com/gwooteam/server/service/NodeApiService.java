@@ -5,13 +5,23 @@ import com.gwooteam.server.auth.QuiltKey;
 
 public interface NodeApiService {
 
-    QuiltKey getServerDsaPubKey();
+    QuiltKey getMacKey(Long id);
 
-    byte[] generateNonce();
+    QuiltKey getServerKemPubKey();
 
-    Boolean verifyNode(Long id, String nodeSign, String nodeMac);
+    String generateNonce();
 
-    Boolean saveNonce(Long id, byte[] nonce);
+    String encapsulate();
+
+    String decapsulate(Long id, String encapData);
+
+    String[] encryptData(String sskVal, String originData);
+
+    Boolean verifyNode(Long id, String pukVal, String nodeSign, String nodeMac);
+
+    Boolean saveNonce(Long id, String nonce);
+
+    Boolean saveSerialNumber(Long id, String serialNum);
 
     Certificates generateCertificates(String pubK_encrypt, String pubK_sign, String publicIP);
 
